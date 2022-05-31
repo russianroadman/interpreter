@@ -35,8 +35,12 @@ object Util {
         val rawEntries = input.split(";")
         val rawEntriesWithSeparator =
             rawEntries.dropLast(1).map { "$it;" }
-        if (rawEntriesWithSeparator.any { !SyntaxChecker.isProperEntry(it) }){
-            throw InvalidInputException("Неверный ввод")
+        rawEntriesWithSeparator.forEach {
+            if (!SyntaxChecker.isProperEntry(it)) {
+                throw InvalidInputException(
+                    "Команда не распознана: $it"
+                )
+            }
         }
         return rawEntriesWithSeparator.map {
             parseEntry(it)

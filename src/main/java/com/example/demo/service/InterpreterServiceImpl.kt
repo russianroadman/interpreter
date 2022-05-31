@@ -78,9 +78,9 @@ class InterpreterServiceImpl(
         }
 
         val content =
-                    contentToChange.subList(0, index - 1) +
+                    contentToChange.subList(0, index) +
                     contentToInsert +
-                    contentToChange.subList(0, index + 1)
+                    contentToChange.subList(index + 1, contentToChange.size)
 
         fileService.write(fileToSave, content)
 

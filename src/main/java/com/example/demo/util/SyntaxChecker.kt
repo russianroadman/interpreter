@@ -12,12 +12,7 @@ object SyntaxChecker {
      * */
     fun isProperSetOfEntries(raw: String): Boolean {
         if (!raw.endsWith(";")) return false
-        val entries = try {
-            Util.parseEntries(raw)
-        } catch (e: InvalidInputException){
-            print("Неверный ввод")
-            return false
-        }
+        val entries = Util.parseEntries(raw)
         return isProperSetOfEntries(entries)
     }
 
