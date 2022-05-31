@@ -1,13 +1,25 @@
-package com.example.demo.service
+package com.example.demo.util
 
-import com.example.demo.exception.ActionNotRecognizedException
-import com.example.demo.exception.InvalidContextException
+import com.example.demo.exception.InvalidInputException
 import com.example.demo.model.ActionType
 import com.example.demo.model.Entry
 import com.example.demo.model.KeyType
-import com.example.demo.util.Util
 
 object SyntaxChecker {
+
+    /**
+     * {ACTION=CREATE;OUT_FILE=out_file.txt;}
+     * */
+    fun isProperSetOfEntries(raw: String): Boolean {
+        if (!raw.endsWith(";")) return false
+        val entries = try {
+            Util.parseEntries(raw)
+        } catch (e: InvalidInputException){
+            print("Неверный ввод")
+            return false
+        }
+        return isProperSetOfEntries(entries)
+    }
 
     /**
      * {READ_FILE=read_file.txt}
@@ -61,27 +73,9 @@ object SyntaxChecker {
         return false
     }
 
-    /**
-     * {ACTION=CREATE;OUT_FILE=out_file.txt;}
-     * */
-    fun isProperSetOfEntries(raw: String): Boolean {
-        println(68)
-        if (!raw.endsWith(";")) return false
-        val rawEntries = raw.split(";")
-        val rawEntriesWithSeparator =
-            rawEntries.dropLast(1).map { "$it;" }
-        rawEntriesWithSeparator.forEach {
-            println("[$it]")
-        }
-        if(rawEntriesWithSeparator.any { !isProperEntry(it) }) return false
-        val entries = rawEntriesWithSeparator.map {
-            Util.parseEntry(it)
-        }
-        return isProperSetOfEntries(entries)
-    }
+    ////////////////////
 
     private fun isProperSetOfEntries(entries: List<Entry>): Boolean {
-        println(83)
         if (hasDuplicates(entries)) return false
         if (!hasKey(entries, KeyType.ACTION)) return false
         if (!hasKey(entries, KeyType.OUT_FILE)) return false
@@ -89,26 +83,18 @@ object SyntaxChecker {
     }
 
     private fun hasKey(entries: List<Entry>, keyType: KeyType): Boolean {
-        println(92)
         return entries.any { it.key == keyType}
     }
 
     private fun hasDuplicates(entries: List<Entry>): Boolean {
-        println(97)
         val list = getEntriesList(entries)
         val set = getEntriesSet(entries)
         return set.size != list.size
     }
 
     private fun isProperContext(entries: List<Entry>): Boolean {
-        println(104)
-        val action = entries.firstOrNull { it.isAction }
-            ?: throw InvalidContextException("Отсутствует команда типа ACTION")
 
-        val actionType = action.action
-            ?: throw ActionNotRecognizedException("ACTION является null")
-
-        return when (actionType) {
+        return when (Util.getActionType(entries)) {
             ActionType.CREATE -> {
                 isValidCreateContext(entries)
             }
@@ -123,7 +109,6 @@ object SyntaxChecker {
     }
 
     private fun isValidCreateContext(entries: List<Entry>): Boolean {
-        println(126)
         val entriesSet = getEntriesSet(entries)
         return (entriesSet == setOf(
             KeyType.ACTION,
@@ -132,7 +117,6 @@ object SyntaxChecker {
     }
 
     private fun isValidAddContext(entries: List<Entry>): Boolean {
-        println(135)
         val entriesSet = getEntriesSet(entries)
         return (entriesSet == setOf(
             KeyType.ACTION,
@@ -143,7 +127,6 @@ object SyntaxChecker {
     }
 
     private fun isValidReplaceContext(entries: List<Entry>): Boolean {
-        println(146)
         val entriesSet = getEntriesSet(entries)
         return (entriesSet == setOf(
             KeyType.ACTION,
@@ -163,7 +146,6 @@ object SyntaxChecker {
     }
 
     private fun isValidNumber(raw: String): Boolean{
-        println(166)
         return if (raw.isEmpty()) false
             else raw.all { Character.isDigit(it) }
     }

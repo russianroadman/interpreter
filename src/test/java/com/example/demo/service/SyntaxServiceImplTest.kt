@@ -1,6 +1,7 @@
 package com.example.demo.service
 
-import com.example.demo.service.SyntaxChecker.isProperSetOfEntries
+import com.example.demo.util.SyntaxChecker
+import com.example.demo.util.SyntaxChecker.isProperSetOfEntries
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
