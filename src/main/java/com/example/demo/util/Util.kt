@@ -9,7 +9,13 @@ object Util {
     const val BASE_URL = "C:/translator4lab/"
 
     fun parseEntry(rawEntry: String): Entry {
-        val split = rawEntry.split("=")
+        val raw =
+            if (rawEntry.endsWith(";")) {
+                rawEntry.dropLast(1)
+            } else {
+                rawEntry
+            }
+        val split = raw.split("=")
         val key = try {
             KeyType.valueOf(split.first())
         } catch (e: IllegalArgumentException) {

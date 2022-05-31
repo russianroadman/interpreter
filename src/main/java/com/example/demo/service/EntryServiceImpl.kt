@@ -1,10 +1,10 @@
 package com.example.demo.service
 
-import com.example.demo.exception.CommandNotRecognizedException
 import com.example.demo.model.Entry
-import com.example.demo.model.KeyType
 import com.example.demo.util.Util
+import org.springframework.stereotype.Service
 
+@Service
 class EntryServiceImpl : EntryService {
 
     /**

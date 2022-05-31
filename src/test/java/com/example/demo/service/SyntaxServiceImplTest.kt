@@ -1,5 +1,6 @@
 package com.example.demo.service
 
+import com.example.demo.service.SyntaxChecker.isProperSetOfEntries
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
@@ -7,9 +8,76 @@ import org.junit.jupiter.api.Assertions.*
 internal class SyntaxServiceImplTest {
 
     @Test
-    fun isProperSetOfEntries() {
+    fun isProperSetOfCreateEntries() {
 
+        val entrySet =
+            "ACTION=CREATE;OUT_FILE=out.txt;"
 
+        assertTrue(isProperSetOfEntries(entrySet))
+
+    }
+
+    @Test
+    fun isProperSetOfAddEntries() {
+
+        val entrySet =
+            "ACTION=ADD;" +
+            "IN_FILE=in.txt;" +
+            "READ_FILE=read.txt;" +
+            "OUT_FILE=out.txt;"
+
+        assertTrue(isProperSetOfEntries(entrySet))
+
+    }
+
+    @Test
+    fun isProperSetOfReplaceEntries() {
+
+        val entrySet =
+            "ACTION=REPLACE;" +
+            "IN_FILE=in.txt;" +
+            "READ_FILE=read.txt;" +
+            "INDEX=1;" +
+            "OUT_FILE=out.txt;"
+
+        assertTrue(isProperSetOfEntries(entrySet))
+
+    }
+
+    @Test
+    fun isNotProperSetOfCreateEntries() {
+
+        val entrySet =
+            "ACTION=CREATE;OUT_FILE=out.txt;IN_FILE=it.txt;"
+
+        assertFalse(isProperSetOfEntries(entrySet))
+
+    }
+
+    @Test
+    fun isNotProperSetOfAddEntries() {
+
+        val entrySet =
+            "ACTION=ADD;" +
+            "IN_FILE=in.txt;" +
+            "READ_FILE=read.txt;"
+
+        assertFalse(isProperSetOfEntries(entrySet))
+
+    }
+
+    @Test
+    fun isNotProperSetOfReplaceEntries() {
+
+        val entrySet =
+            "ACTION=REPLACE;" +
+            "IN_FILE=in.txt;" +
+            "READ_FILE=read.txt;" +
+            "INDEX=1;" +
+            "INDEX=1;" +
+            "OUT_FILE=out.txt;"
+
+        assertFalse(isProperSetOfEntries(entrySet))
 
     }
 
