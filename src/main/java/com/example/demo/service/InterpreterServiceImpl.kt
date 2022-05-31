@@ -68,6 +68,7 @@ class InterpreterServiceImpl(
                 fileToSave,
                 contentToChange + contentToInsert
             )
+            return
         }
 
         if (index == contentToChange.size - 1) {
@@ -75,6 +76,7 @@ class InterpreterServiceImpl(
                 fileToSave,
                 contentToChange.dropLast(1) + contentToInsert
             )
+            return
         }
 
         val content =
